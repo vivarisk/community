@@ -4,14 +4,14 @@ package life.huangsl.community.dto;
  * @author hsl
  * @create 2021-07-28 22:26
  */
-public class GithubUser {
+public class GiteeUser {
     private String name;
     private Long id;
     private String bio;
 
     @Override
     public String toString() {
-        return "GithubUser{" +
+        return "GiteeUser{" +
                 "name='" + name + '\'' +
                 ", id=" + id +
                 ", bio='" + bio + '\'' +

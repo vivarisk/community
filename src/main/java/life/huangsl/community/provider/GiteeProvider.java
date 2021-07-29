@@ -3,7 +3,7 @@ package life.huangsl.community.provider;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import life.huangsl.community.dto.AccessTokenDTO;
-import life.huangsl.community.dto.GithubUser;
+import life.huangsl.community.dto.GiteeUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
  * @create 2021-07-28 21:42
  */
 @Component
-public class GithubProvider {
+public class GiteeProvider {
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
         OkHttpClient client = new OkHttpClient();
@@ -30,12 +30,13 @@ public class GithubProvider {
             JSONObject jsonObject = JSON.parseObject(string);
             String token = jsonObject.getString("access_token");
             return token;
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public GithubUser getUser(String accessToken) {
+    public GiteeUser getUser(String accessToken) {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -44,8 +45,8 @@ public class GithubProvider {
         try {
             Response response = client.newCall(request).execute();
             String string = response.body().string();
-            GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
-            return githubUser;
+            GiteeUser giteeUser = JSON.parseObject(string, GiteeUser.class);
+            return giteeUser;
         } catch (IOException e) {
         }
         return null;
