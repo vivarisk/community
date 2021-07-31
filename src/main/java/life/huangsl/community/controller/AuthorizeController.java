@@ -5,14 +5,14 @@ import life.huangsl.community.dto.GiteeUser;
 import life.huangsl.community.mapper.UserMapper;
 import life.huangsl.community.model.User;
 import life.huangsl.community.provider.GiteeProvider;
-import life.huangsl.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 /**
@@ -24,8 +24,7 @@ public class AuthorizeController {
 
     @Autowired
     private GiteeProvider giteeProvider;
-    @Autowired
-    private UserService userService;
+
     @Autowired
     private UserMapper userMapper;
 
@@ -38,7 +37,7 @@ public class AuthorizeController {
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
-                           HttpServletRequest request){
+                           HttpServletResponse response){
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setGrant_type("authorization_code");
         accessTokenDTO.setCode(code);
@@ -50,24 +49,18 @@ public class AuthorizeController {
         System.out.println(user);
         if(user != null){
             User user2 = new User();
-            user2.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user2.setToken(token);
             user2.setName(user.getName());
             user2.setAccountId(String.valueOf(user.getId()));
             user2.setGmtCreate(System.currentTimeMillis());
             user2.setGmtModified(user2.getGmtCreate());
             System.out.println(user2);
-            System.out.println(userMapper == null);
             userMapper.insert(user2);
-            request.getSession().setAttribute("user", user);
+            response.addCookie(new Cookie("token", token));
             return "redirect:/";
         }else{
             return "redirect:/";
         }
-    }
-
-    @GetMapping("/user")
-    public void userselect(@RequestParam(name = "id") int id){
-        User user = userService.getById(id);
-        System.out.println(user);
     }
 }
