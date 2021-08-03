@@ -29,6 +29,7 @@ public class GiteeProvider {
             String string = response.body().string();
             JSONObject jsonObject = JSON.parseObject(string);
             String token = jsonObject.getString("access_token");
+            System.out.println(token);
             return token;
         } catch (Exception e) {
             e.printStackTrace();
