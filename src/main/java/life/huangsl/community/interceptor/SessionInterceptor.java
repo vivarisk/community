@@ -3,6 +3,7 @@ package life.huangsl.community.interceptor;
 import life.huangsl.community.mapper.UserMapper;
 import life.huangsl.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,8 +22,14 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private UserMapper userMapper;
 
+//    @Value("${gitee.redirect.uri}")
+//    private String giteeRedirectUri;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+//        request.getServletContext().setAttribute("giteeRedirectUri", giteeRedirectUri);
+
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {

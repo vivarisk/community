@@ -35,9 +35,9 @@ public class IndexController {
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
                         @RequestParam(name = "size", defaultValue = "5") Integer size) {
         User user = (User) request.getSession().getAttribute("user");
-        if(user == null){
-            return "redirect:/";
-        }
+//        if(user == null){
+//            return "redirect:/";
+//        }
 
         PaginationDTO pagination = questionService.list(page, size);
         model.addAttribute("pagination", pagination);
