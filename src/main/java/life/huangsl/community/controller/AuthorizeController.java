@@ -5,14 +5,18 @@ import life.huangsl.community.dto.GiteeUser;
 import life.huangsl.community.mapper.UserMapper;
 import life.huangsl.community.model.User;
 import life.huangsl.community.provider.GiteeProvider;
+import life.huangsl.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Response;
 import java.util.UUID;
 
 /**
@@ -26,7 +30,7 @@ public class AuthorizeController {
     private GiteeProvider giteeProvider;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @Value("${gitee.client.id}")
     private String clientID;
@@ -53,16 +57,24 @@ public class AuthorizeController {
             user2.setToken(token);
             user2.setName(user.getName());
             user2.setAccountId(String.valueOf(user.getId()));
-            user2.setGmtCreate(System.currentTimeMillis());
-            user2.setGmtModified(user2.getGmtCreate());
             user2.setAvatarUrl(user.getAvatarUrl());
             user2.setBio(user.getBio());
             System.out.println(user2);
-            userMapper.insert(user2);
+            userService.createOrUpdate(user2);
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         }else{
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }
