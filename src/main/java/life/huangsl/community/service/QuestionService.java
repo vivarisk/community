@@ -4,6 +4,7 @@ import life.huangsl.community.dto.PaginationDTO;
 import life.huangsl.community.dto.QuestionDTO;
 import life.huangsl.community.exception.CustomizeErrorCode;
 import life.huangsl.community.exception.CustomizeException;
+import life.huangsl.community.mapper.QuestionExtMapper;
 import life.huangsl.community.mapper.QuestionMapper;
 import life.huangsl.community.mapper.UserMapper;
 import life.huangsl.community.model.Question;
@@ -27,6 +28,8 @@ public class QuestionService {
     private UserMapper userMapper;
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
 
@@ -136,5 +139,12 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
