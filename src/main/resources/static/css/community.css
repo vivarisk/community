@@ -100,8 +100,13 @@ body {
     color: #499ef3;
 }
 
-
-
 .question-title{
     margin-top: 20px;
+}
+
+.question-tag{
+    margin-right: 5px;
+}
+
+.question-related{
 }
