@@ -3,6 +3,7 @@ package life.huangsl.community.controller;
 import life.huangsl.community.dto.PaginationDTO;
 import life.huangsl.community.mapper.UserMapper;
 import life.huangsl.community.model.User;
+import life.huangsl.community.service.NotificationService;
 import life.huangsl.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,8 @@ public class ProfileController {
     private UserMapper userMapper;
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name = "action") String action,
@@ -40,13 +43,16 @@ public class ProfileController {
         if("questions".equals(action)){
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
+            PaginationDTO pagination = questionService.list(user.getId(), page, size);
+            model.addAttribute("pagination", pagination);
         }else if("replies".equals(action)){
+
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            model.addAttribute("pagination", paginationDTO);
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
         }
 
-        PaginationDTO pagination = questionService.list(user.getId(), page, size);
-        model.addAttribute("pagination", pagination);
         return "profile";
     }
 }

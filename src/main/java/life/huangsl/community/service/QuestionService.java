@@ -66,7 +66,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
 
         return paginationDTO;
     }
@@ -77,7 +77,7 @@ public class QuestionService {
 
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(id);
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
         Integer totalPage = 0;
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -109,7 +109,7 @@ public class QuestionService {
             questionDTOList.add(questionDTO);
         }
 
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
 
         return paginationDTO;
     }
