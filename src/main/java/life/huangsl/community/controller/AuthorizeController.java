@@ -6,6 +6,7 @@ import life.huangsl.community.mapper.UserMapper;
 import life.huangsl.community.model.User;
 import life.huangsl.community.provider.GiteeProvider;
 import life.huangsl.community.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import java.util.UUID;
  * @create 2021-07-28 21:30
  */
 @Controller
+@Slf4j
 public class AuthorizeController {
 
     @Autowired
@@ -64,6 +66,7 @@ public class AuthorizeController {
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         }else{
+            log.error("callback get github error,{}", user);
             return "redirect:/";
         }
     }
